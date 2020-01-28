@@ -13,7 +13,8 @@ Type the following in command line
 
 ## Use
 
-Get an image file you like
-Type the following in command line
+Get an image file you like and send it to host for duration [s].
 
-    python pimage.py [my_imagefile] [host]
+Type on command line
+
+    python pimage.py [my_imagefile] [host] [duration]
