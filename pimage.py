@@ -5,7 +5,8 @@ import sys
 from PIL import Image
 
 # This is what separates pixel beign shown or not,
-# currently only values above this are shown
+# currently only values above this are shown and
+# below are not shown at all
 THRESHOLD = 250
 
 def load(imagefile):
@@ -25,12 +26,9 @@ def load(imagefile):
 
 	return dp
 
-
-def send(dp1, HOST):
+def send(dp1, HOST, dur):
 	# resolution 65500 x 1500
 	# target reso 160x100
-
-	dur = 5
 
 	#origo_x = 0
 	#origo_y = 1450
@@ -51,8 +49,8 @@ def send(dp1, HOST):
 	msglens = range(origo_y, end_y, y_scale)
 
 	# make UDP-socket
-#	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#	s.setblocking(0)
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.setblocking(0)
 
 	# send packages
 	print("SENDING PACKAGES..")
@@ -66,21 +64,22 @@ def send(dp1, HOST):
 
 		xp = random.randint(x, x+x_scale)
 		yp = random.randint(y+y_scale, y)
-#		s.sendto("n"*yp, socket.MSG_DONTWAIT, (HOST, xp)) #n*yp
+		s.sendto("n"*yp, (HOST, xp)) #n*yp
+		#s.sendto("n"*yp, socket.MSG_DONTWAIT, (HOST, xp)) #n*yp
 		print("sending x:" + str(xp) + " y:" + str(yp))
 		pkgcount = pkgcount + 1
 
 	print("CLOSING.. PACKETS SENT " + str(pkgcount))
 
 	# close socket
-#	s.close()
-
+	s.close()
 
 # check arguments
-if (len(sys.argv) < 3):
-	print("Give 2 arguments: imagefile and host address")
+if (len(sys.argv) < 4):
+	print("Give 3 arguments: imagefile, host address and duration[s]")
 else:
 	imagefile = sys.argv[1]
 	HOST = sys.argv[2]
 	dp = load(imagefile)
-	send(dp, HOST)
+	duration = float(sys.argv[3]) #s
+	send(dp, HOST, duration)
