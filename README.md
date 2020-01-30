@@ -1,6 +1,8 @@
 # pimage
 Send network packets in a creative way and form images in [port, packetsize]-space
 
+![Nyan-cat in a network package analyser](doc/nyan-packets.jpg)
+
 ## Note
 Only use this software inside your own network and with care.
 
