@@ -32,23 +32,23 @@ def send(dp1, HOST, dur):
     # resolution 65500 x 1500
     # target reso 160x100
 
-	#origo_x = 0
-	#origo_y = 1450
+    #start_x = 0
+    #start_y = 1450
     #end_x = 65500
     #end_y = 0
     #res_x = 160
     #res_y = 100
 
-	origo_x = 20000
-	origo_y = 1000
+    start_x = 20000
+    start_y = 1000
     end_x = 45500
     end_y = 500
     res_x = 160
     res_y = 100
-	x_scale = (end_x-origo_x)/res_x
-	y_scale = (end_y-origo_y)/res_y
-	ports = range(origo_x, end_x, x_scale)
-	msglens = range(origo_y, end_y, y_scale)
+    x_scale = (end_x-start_x)/res_x
+    y_scale = (end_y-start_y)/res_y
+    ports = range(start_x, end_x, x_scale)
+    msglens = range(start_y, end_y, y_scale)
 
     # make UDP-socket
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
