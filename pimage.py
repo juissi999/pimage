@@ -9,77 +9,80 @@ from PIL import Image
 # below are not shown at all
 THRESHOLD = 250
 
+
 def load(imagefile):
-	
-	img = Image.open(imagefile)
-	pixels = img.load()
 
-	x,y = img.size
+    img = Image.open(imagefile)
+    pixels = img.load()
 
-	dp = []
-	for xx in range(0,x):
-		for yy in range(0, y):
-			val = pixels[xx, yy]
+    x, y = img.size
 
-			if val < THRESHOLD:
-				dp.append([xx,yy])
+    dp = []
+    for xx in range(0, x):
+        for yy in range(0, y):
+            val = pixels[xx, yy]
 
-	return dp
+            if val < THRESHOLD:
+                dp.append([xx, yy])
+
+    return dp
+
 
 def send(dp1, HOST, dur):
-	# resolution 65500 x 1500
-	# target reso 160x100
+    # resolution 65500 x 1500
+    # target reso 160x100
 
 	#origo_x = 0
 	#origo_y = 1450
-	#end_x = 65500
-	#end_y = 0
-	#res_x = 160
-	#res_y = 100
+    #end_x = 65500
+    #end_y = 0
+    #res_x = 160
+    #res_y = 100
 
 	origo_x = 20000
 	origo_y = 1000
-	end_x = 45500
-	end_y = 500
-	res_x = 160
-	res_y = 100
+    end_x = 45500
+    end_y = 500
+    res_x = 160
+    res_y = 100
 	x_scale = (end_x-origo_x)/res_x
 	y_scale = (end_y-origo_y)/res_y
 	ports = range(origo_x, end_x, x_scale)
 	msglens = range(origo_y, end_y, y_scale)
 
-	# make UDP-socket
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.setblocking(0)
+    # make UDP-socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setblocking(0)
 
-	# send packages
-	print("SENDING PACKAGES..")
-	endtime = time.time()+dur
-	pkgcount = 0
-	while (time.time() < endtime):
-		
-		i = random.choice(dp1)
-		x = ports[i[0]]
-		y = msglens[i[1]]
+    # send packages
+    print("SENDING PACKAGES..")
+    endtime = time.time()+dur
+    pkgcount = 0
+    while (time.time() < endtime):
 
-		xp = random.randint(x, x+x_scale)
-		yp = random.randint(y+y_scale, y)
-		s.sendto("n"*yp, (HOST, xp)) #n*yp
-		#s.sendto("n"*yp, socket.MSG_DONTWAIT, (HOST, xp)) #n*yp
-		print("sending x:" + str(xp) + " y:" + str(yp))
-		pkgcount = pkgcount + 1
+        i = random.choice(dp1)
+        x = ports[i[0]]
+        y = msglens[i[1]]
 
-	print("CLOSING.. PACKETS SENT " + str(pkgcount))
+        xp = random.randint(x, x+x_scale)
+        yp = random.randint(y+y_scale, y)
+        s.sendto("n"*yp, (HOST, xp))  # n*yp
+        # s.sendto("n"*yp, socket.MSG_DONTWAIT, (HOST, xp)) #n*yp
+        print("sending x:" + str(xp) + " y:" + str(yp))
+        pkgcount = pkgcount + 1
 
-	# close socket
-	s.close()
+    print("CLOSING.. PACKETS SENT " + str(pkgcount))
+
+    # close socket
+    s.close()
+
 
 # check arguments
 if (len(sys.argv) < 4):
-	print("Give 3 arguments: imagefile, host address and duration[s]")
+    print("Give 3 arguments: imagefile, host address and duration[s]")
 else:
-	imagefile = sys.argv[1]
-	HOST = sys.argv[2]
-	dp = load(imagefile)
-	duration = float(sys.argv[3]) #s
-	send(dp, HOST, duration)
+    imagefile = sys.argv[1]
+    HOST = sys.argv[2]
+    dp = load(imagefile)
+    duration = float(sys.argv[3])  # s
+    send(dp, HOST, duration)
